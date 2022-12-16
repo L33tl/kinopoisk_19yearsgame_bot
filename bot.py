@@ -178,11 +178,13 @@ class Bot:
                 [button for button in again_buttons if button.text == 'Играть ещё раз'][0].click()
             print('-------')
 
-    def run(self):
+    def run(self, game_type):
         self.setup()
         self.authorisation()
-        # self.run_game_quotes() # Игра - цитаты
-        self.run_game_descriptions()  # Игра - описания
+        if game_type == 1:
+            self.run_game_quotes()  # Игра - цитаты
+        elif game_type == 2:
+            self.run_game_descriptions()  # Игра - описания
 
         sleep()
         self.driver.close()
@@ -192,7 +194,9 @@ def main():
     bot = Bot()
     while True:
         try:
-            bot.run()
+            # 1 - Игра - Цитаты
+            # 2 - Игра - Описания
+            bot.run(1)
         except Exception as e:
             print(e)
 
