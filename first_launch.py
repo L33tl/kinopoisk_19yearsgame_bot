@@ -28,6 +28,7 @@ def get_access_to_account():
     login_button.click()
     sleep()
     save_cookies(driver, cookies_path)
+    print('Successfully saved cookies!')
 
 
 if __name__ == '__main__':
