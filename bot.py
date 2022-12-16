@@ -114,9 +114,6 @@ class Bot:
         counter = 0
         while True:
             sleep()
-            if counter == 330:
-                time.sleep(300)
-                exit()
 
             is_random_answer = False
             print('-------')
@@ -206,6 +203,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-# 64
-# 400
