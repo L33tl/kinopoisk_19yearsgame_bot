@@ -27,6 +27,7 @@ def get_access_to_account():
     login_button = driver.find_element(by=By.ID, value='passp:sign-in')
     login_button.click()
     sleep()
+    sleep()
     save_cookies(driver, cookies_path)
     print('Successfully saved cookies!')
 
