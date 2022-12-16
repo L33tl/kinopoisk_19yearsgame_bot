@@ -1,14 +1,11 @@
-import select
 import time
 
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 
 from config import url, cookies_path
 from utils import *
 
-from random import random, randint
+from random import random
 
 
 def wait(function):
@@ -82,7 +79,6 @@ class Bot:
                     counter += 1
                     lives += 1
                     print(f'Current Score: {counter}')
-                    # print(e)
 
                 if lives > 0:
                     print(f'Has {lives} lives')
@@ -185,8 +181,8 @@ class Bot:
     def run(self):
         self.setup()
         self.authorisation()
-        # self.run_game_quotes()
-        self.run_game_descriptions()
+        # self.run_game_quotes() # Игра - цитаты
+        self.run_game_descriptions()  # Игра - описания
 
         sleep()
         self.driver.close()

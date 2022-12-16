@@ -9,7 +9,6 @@ description_path = 'answers/descriptions.json'
 
 def save_cookies(driver: webdriver.Chrome, cookies_path):
     with open(cookies_path, 'wb') as filehandler:
-        print(driver.get_cookies())
         pickle.dump(driver.get_cookies(), filehandler)
 
 
