@@ -1,3 +1,4 @@
+import select
 import time
 
 from selenium import webdriver
@@ -19,8 +20,7 @@ def wait(function):
 
 
 def sleep():
-    a = (randint(1, 2) if randint(0, 1) else randint(4, 5)) + random()
-    print(a)
+    a = 1 + random()
     time.sleep(a)
 
 
@@ -29,6 +29,7 @@ class Bot:
         self.driver = webdriver.Chrome()
         self.url = url
         self.quotes_answers = load_quotes_answers()
+        self.description_answers = load_description_answers()
 
     def setup(self):
         self.driver.set_window_position(1920 / 2, 0)
@@ -50,6 +51,7 @@ class Bot:
         run_button.click()
 
         lives = 3
+        counter = 0
         while True:
             sleep()
             question_label = self.driver.find_element(by=By.CLASS_NAME, value='game__test-question')
@@ -61,8 +63,10 @@ class Bot:
             for button in answers_buttons:
                 if button.text == right_answer:
                     print('Has answer')
-                    button.click()
+                    counter += 1
+                    print(f'Current Score: {counter}')
                     sleep()
+                    button.click()
                     break
             else:
                 print('Random')
@@ -75,8 +79,9 @@ class Bot:
                     self.quotes_answers[question_label.text] = right_answer
                     save_quotes_answers(self.quotes_answers)
                 except Exception as e:
-                    print(123123)
+                    counter += 1
                     lives += 1
+                    print(f'Current Score: {counter}')
                     # print(e)
 
                 if lives > 0:
@@ -88,15 +93,103 @@ class Bot:
                         print('Cant find the continue button')
                 else:
                     print('Run out of lives')
+                    print(f'Final Score: {counter}')
                     lives = 3
+                    counter = 0
                     sleep()
                     again_button = self.driver.find_element(by=By.CLASS_NAME, value='button_color_white-2')
                     again_button.click()
 
+    def run_game_descriptions(self):
+        sleep()
+        category_button = [i for i in self.driver.find_elements(by=By.CLASS_NAME, value='episode-card__title') if
+                           i.text == 'Описания'][0]
+        category_button.click()
+        sleep()
+        run_button = [button for button in self.driver.find_elements(by=By.TAG_NAME,
+                                                                     value='button') if button.text == 'Начать игру'][0]
+        run_button.click()
+
+        lives = 3
+        counter = 0
+        while True:
+            sleep()
+            if counter == 330:
+                time.sleep(300)
+                exit()
+
+            is_random_answer = False
+            print('-------')
+            question_label = self.driver.find_element(by=By.CLASS_NAME, value='game__test-question').text
+            print(question_label)
+            sleep()
+            answers_buttons = self.driver.find_elements(by=By.CLASS_NAME, value='text-fit')
+            my_answer = [self.description_answers[key] for key in self.description_answers if
+                         key == question_label]
+            if my_answer:
+                print('Has answer')
+                my_answer = my_answer[0]
+            for button in answers_buttons:
+                if button.text == my_answer:
+                    counter += 1
+                    print(button.text)
+                    button.click()
+                    break
+            else:
+                print('Random')
+                is_random_answer = True
+                button = answers_buttons[0]
+                button_text = button.text
+                print(button.text)
+                button.click()
+                time.sleep(1)
+
+            try:
+                sleep()
+                right_answer = self.driver.find_element(by=By.CLASS_NAME, value='modal-wrong-answer__title').text
+                print(right_answer)
+                right_answer = right_answer[right_answer.find('«') + 1:right_answer.rfind('»')]
+                lives -= 1
+                print('-')
+                print(question_label)
+                print('-')
+                print(self.description_answers.get(question_label))
+                self.description_answers[question_label] = right_answer
+                print(self.description_answers.get(question_label))
+                print('-')
+                save_description_answers(self.description_answers)
+                sleep()
+                continue_button = self.driver.find_element(by=By.CLASS_NAME, value='button_color_darken')
+                continue_button.click()
+            except Exception as e:
+                if is_random_answer:
+                    print('-')
+                    print(question_label)
+                    print('-')
+                    print(self.description_answers.get(question_label))
+                    self.description_answers[question_label] = button_text
+                    print(self.description_answers.get(question_label))
+                    print('-')
+                    save_description_answers(self.description_answers)
+                print(f'Current Score: {counter}')
+
+            if lives > 0:
+                print(f'Has {lives} lives')
+            else:
+                print('Run out of lives')
+                print(f'Final Score: {counter}')
+                lives = 3
+                counter = 0
+                sleep()
+                again_buttons = self.driver.find_elements(by=By.TAG_NAME, value='button')
+                [button for button in again_buttons if button.text == 'Играть ещё раз'][0].click()
+            print('-------')
+
     def run(self):
         self.setup()
         self.authorisation()
-        self.run_game_quotes()
+        # self.run_game_quotes()
+        self.run_game_descriptions()
 
         sleep()
         self.driver.close()
@@ -113,3 +206,6 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+# 64
+# 400
