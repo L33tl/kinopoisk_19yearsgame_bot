@@ -5,4 +5,4 @@
     Once you got your cookies, you can delete the account.txt file.
 3) Launch the bot with bot.py (Choose the game type in code)
 
-#Внимание! Бот платный. Стоимость - одна ⭐#
+# Внимание! Бот платный. Стоимость - одна ⭐
